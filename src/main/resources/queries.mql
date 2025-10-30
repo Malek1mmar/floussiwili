@@ -1,0 +1,31 @@
+// Fichier: mongo-queries.js
+
+// SELECT ALL
+db.depenses.find({
+})
+
+// Trouver les dépenses montant < 300.00
+db.expenses.find({
+    "montant": { $lt: 300.00 }
+});
+
+// Les documents où 'montant' est une chaîne de caractères (code 2)
+db.depenses.find({
+  "montant": { $type: 2 }
+ });
+
+// Convertir toutes les chaînes en nombres (Double)
+db.depenses.updateMany(
+  { "montant": { $exists: true, $type: 2 } },
+  [
+    {
+      $set: {
+        "montant": { $toDouble: "$montant" }
+      }
+    }
+  ]
+);
+
+db.depenses.find(
+    { "montant": { $lt: 300 } }
+    );
