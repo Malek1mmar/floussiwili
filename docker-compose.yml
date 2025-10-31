@@ -1,6 +1,6 @@
 version: '3.8'
-
 services:
+  # 1. Service MongoDB
   mongodb:
     image: mongo:7.0
     container_name: mongodb_depenses
@@ -11,16 +11,22 @@ services:
     environment:
       MONGO_INITDB_DATABASE: db_depenses
 
-#  app:
-#    image: depenses-app:v1
-#    container_name: depenses_app
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - mongodb
-#
-#    environment:
-#      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/db_depenses
+  # 2. Service de l'Application Spring Boot
+  app:
+    # 1. Utiliser 'build' pour construire l'image localement à partir du Dockerfile
+    build:
+      context: .
+    image: flousiwili:1.0
+    container_name: flousiwili
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/db_depenses
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: db_depenses
+    depends_on:
+      - mongodb
 
 volumes:
   mongo-data:
